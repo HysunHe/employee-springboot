@@ -241,12 +241,12 @@
 
                     var addEmployee={
                       firstName:$("#batchFirstName").val(),
-                      lastName:"",
-                      email:"",
-                      phone:"",
-                      birthDate:"",
-                      title:"",
-                      dept:""
+                      lastName:"Zhang",
+                      email:"batchload@zoo.o",
+                      phone:"07553000000",
+                      birthDate:"1999-12-31",
+                      title:"Developer",
+                      department:"Solution Engineering"
                     };
                    
                     $.ajax({
@@ -294,7 +294,7 @@
                   phone:$("#addPhone").val(),
                   birthDate:$("#addBirthDate").val(),
                   title:$("#addTitle").val(),
-                  dept:$("#addDept").val()
+                  department:$("#addDept").val()
                 };
                 $("#detail").html("ADDING...");
                 $( this ).dialog( "close" );

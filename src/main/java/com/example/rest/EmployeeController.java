@@ -3,7 +3,6 @@
 package com.example.rest;
 
 import java.util.List;
-import org.apache.commons.lang3.ArrayUtils;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,13 +25,13 @@ public class EmployeeController {
     @RequestMapping(method = RequestMethod.GET)
     public Employee[] getAll() {
         Employee[] out = edao.getAllEmployees().toArray(new Employee[0]);
-        ArrayUtils.reverse(out);
+        //ArrayUtils.reverse(out);
         return out;
     }
 
     // Get an employee
     @RequestMapping(method = RequestMethod.GET, value = "{id}")
-    public ResponseEntity get(@PathVariable long id) {
+    public ResponseEntity<?> get(@PathVariable long id) {
 
         Employee match = null;
         match = edao.getEmployee(id);
