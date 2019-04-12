@@ -36,7 +36,7 @@ public class EmployeeDatabaseDAOImpl extends OracleDS implements EmployeeDAO{
 
     @Override
     public List<Employee> getAllEmployees(){
-		String queryStr = "SELECT * FROM EMPLOYEE";
+		String queryStr = "SELECT * FROM EMPLOYEE order by ID desc";
 		List<Employee> resultList = this.query(queryStr);
         return resultList;	
     }

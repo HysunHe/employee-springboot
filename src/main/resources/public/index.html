@@ -10,6 +10,7 @@
   <script>
     var promptDialog=false;
     var server="/employee/";
+    // var server="http://localhost:8080/";
     $(function(){
       if(promptDialog){
         $("#connectDialog").dialog({ closeOnEscape: false, modal: true, width: "auto", resize: "auto", open: function (event, ui) { $(".ui-dialog-titlebar-close", ui.dialog | ui).hide(); } });
@@ -87,6 +88,9 @@
     }
 
     #addDialog {
+      display: none;
+    }
+    #batchDialog {
       display: none;
     }
   </style>
@@ -214,6 +218,59 @@
 	  
     $(function(){
      
+      $("#batch").button().on("click", function(){
+
+        $("#batchDialog").dialog({
+            modal:true,
+            title: "batch add new employee",
+            buttons:{
+              "Add":function(){
+
+                var batchCount = $("#batchCount").val();
+                var batchInterval = $("#batchInterval").val();
+                var interval = setInterval(function(){ 
+
+                  if(batchCount <= 0){
+                    $("#batch").val("Batch Add New - Completed");
+                     clearInterval(interval);
+                     loadEmployees();
+                     return;
+                  }
+                  $("#batch").val("Batch Add New - Running... " + batchCount);
+                  batchCount--;
+
+                    var addEmployee={
+                      firstName:$("#batchFirstName").val(),
+                      lastName:"",
+                      email:"",
+                      phone:"",
+                      birthDate:"",
+                      title:"",
+                      dept:""
+                    };
+                   
+                    $.ajax({
+                      url:server +"employees",
+                      method:"POST",
+                      data:JSON.stringify(addEmployee),
+                      contentType: 'application/json',
+                      }).done(function(data){
+                        
+                    });
+                  
+                }, batchInterval);
+
+                $("#detail").html("ADDING...");
+                $( this ).dialog( "close" );
+                $("#detail").hide();
+
+              },
+              "Cancel":function(){
+                $(this).dialog( "close" );
+              }
+            }
+        });
+      });
 
       $("#addButton").button().on("click", function(){
 
@@ -307,6 +364,8 @@
         }).done(function(data){
           $("#people").hide();
           $("#people").empty();
+          // kyle
+          $("#count").text(data.length);
           data.forEach(function(employee){
             var item = $(peopleTemplate.render(employee));
             item.on("click", function(){
@@ -327,7 +386,7 @@
 <body>
   <h1>Cloud Employee App</h1>
   <nav>
-    <h2>People</h2>
+    <span>Found </span><b id="count"></b><span> results</span>
     <table width="100%">
       <tr>
         <td>
@@ -340,6 +399,9 @@
         </td>
         <td align="right" width="10%">
           <input id="addButton" value="Add New" type="button">
+          <br>
+          <input id="batch" value="Batch Add New" style="margin-top: 10px;" type="button">
+
         </td>
       </tr>
     </table>
@@ -381,6 +443,21 @@
         <label for="addBirthDate">Birthdate</label><input type="text" id="addBirthDate" value="" class="text ui-widget-content ui-corner-all">
         <label for="addTitle">Title</label><input type="text" id="addTitle" value="" class="text ui-widget-content ui-corner-all">
         <label for="addDept">Department</label><input type="text" id="addDept" value="" class="text ui-widget-content ui-corner-all">
+
+        <!-- Allow form submission with keyboard without duplicating the dialog button -->
+        <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+      </fieldset>
+    </form>
+  </div>
+
+  <div id="batchDialog">
+    <p class="validateTips">All form fields are required.</p>
+    <form>
+      <fieldset>
+
+        <label for="batchFirstName">First Name</label><input type="text" id="batchFirstName" value="batch-01" class="text ui-widget-content ui-corner-all">
+        <label for="batchCount">Count</label><input type="text" id="batchCount" value="1" class="text ui-widget-content ui-corner-all">
+        <label for="batchInterval">Interval (millseconds)</label><input type="text" id="batchInterval" value="1000" class="text ui-widget-content ui-corner-all">
 
         <!-- Allow form submission with keyboard without duplicating the dialog button -->
         <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
